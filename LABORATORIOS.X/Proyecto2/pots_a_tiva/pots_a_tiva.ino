@@ -28,7 +28,14 @@ void loop() {
     cuenta++;
   }
   Serial.println("Dato2: " + palabra2);
+
+  cuenta = palabra1.toInt();
+  Serial.println(cuenta);
+  cuenta = palabra2.toInt();
+  Serial.println(cuenta);
+  
   cuenta = 0; 
+ 
   palabra1 = "";
   palabra2 = "";
 }
