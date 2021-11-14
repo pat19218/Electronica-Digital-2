@@ -7,7 +7,7 @@
  * Programa:    Informacion de parqueos en la nube
  * Hardware:    Tiva C TM4123G
  * Creación:    10 de noviembre de 2021
- * modificado:  10 de noviembre de 2021
+ * modificado:  14 de noviembre de 2021
  */
 #include <stdint.h>
 #include <stdbool.h>
@@ -42,6 +42,7 @@ uint8_t sensor5 = 0;
 uint8_t sensor6 = 0;
 uint8_t sensor7 = 0;
 uint8_t sensor8 = 0;
+uint8_t EspaciosLibres = 8;
 
 //------------------------------Prototipos de Funciones-----------------------
 void delay(uint32_t msec);
@@ -54,11 +55,18 @@ int main(void){
     // Configuración del oscilador externo, usando PLL y teniendo una frecuencia de 40MHz       datasheet pg223
     SysCtlClockSet(SYSCTL_SYSDIV_5 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
 
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);    //Activo puerto A
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);    //Activo puerto B
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);    //Activo puerto C
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);    //Activo puerto D
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);    //Activo puerto E
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);    //Activo puerto F
 
     GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);             //RGB pines de salida
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_6);                                       //display7seg pines de salida
+    GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6);                          //display7seg pines de salida
+    GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4);                          //display7seg pines de salida
+    GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6);                          //display7seg pines de salida
     GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_4);                                        //pines de entrada push
     GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4);
     GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
@@ -90,51 +98,118 @@ int main(void){
         sensor7 = GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_3);
         sensor8 = GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_4);
 
-        if (sensor1 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x02);//ROJO
+        if (sensor1 == 0 ){
+            //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x02);//ROJO
             UARTCharPut(UART0_BASE, '1');
-            UARTCharPut(UART1_BASE, '1');
-            delay(500);
-        }if (sensor2 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x04);//AZUL
+            EspaciosLibres--;
+            //delay(500);
+        }if (sensor2 == 0 ){
+           // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x04);//AZUL
             UARTCharPut(UART0_BASE, '2');
-            UARTCharPut(UART1_BASE, '2');
-            delay(500);
+            EspaciosLibres--;
+           // delay(500);
         }if (sensor3 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x08);//VERDE
+            //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x08);//VERDE
             UARTCharPut(UART0_BASE, '3');
-            UARTCharPut(UART1_BASE, '3');
-            delay(500);
-        }if (sensor4 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x06);
+            EspaciosLibres--;
+           // delay(500);
+        }if (sensor4 == 0 ){
+            //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x06);
             UARTCharPut(UART0_BASE, '4');
-            UARTCharPut(UART1_BASE, '4');
-            delay(500);
-        }if (sensor5 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
+            EspaciosLibres--;
+           // delay(500);
+        }if (sensor5 == 0 ){
+            //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
             UARTCharPut(UART0_BASE, '5');
-            UARTCharPut(UART1_BASE, '5');
-            delay(500);
-        }if (sensor6 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
+            EspaciosLibres--;
+           // delay(500);
+        }if (sensor6 == 0 ){
+            //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
             UARTCharPut(UART0_BASE, '6');
-            UARTCharPut(UART1_BASE, '6');
-            delay(500);
-        }if (sensor7 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0E);
+            EspaciosLibres--;
+            //delay(500);
+        }if (sensor7 == 0 ){
+           // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0E);
             UARTCharPut(UART0_BASE, '7');
-            UARTCharPut(UART1_BASE, '7');
-            delay(500);
-        }if (sensor8 == 0){
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
+            EspaciosLibres--;
+            //delay(500);
+        }if (sensor8 == 0 ){
+           // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
             UARTCharPut(UART0_BASE, '8');
-            UARTCharPut(UART1_BASE, '8');
-            delay(500);
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
-            delay(500);
-            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x00);
+            EspaciosLibres--;
+            //delay(500);
+           // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
+            //delay(500);
+           // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x00);
         }
 
+        switch(EspaciosLibres){
+        case(0):
+                UARTCharPut(UART1_BASE, '0');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00011100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B01000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //G, F
+                break;
+        case(1):
+                UARTCharPut(UART1_BASE, '1');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00001000);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B00000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B00000000);   //G, F
+                break;
+        case(2):
+                UARTCharPut(UART1_BASE, '2');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00011100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B00000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B01000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B10000000);   //G, F
+                break;
+        case(3):
+                UARTCharPut(UART1_BASE, '3');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00011100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B00000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B10000000);   //G, F
+                break;
+        case(4):
+                UARTCharPut(UART1_BASE, '4');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00001000);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B00000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B11000000);   //G, F
+                break;
+        case(5):
+                UARTCharPut(UART1_BASE, '5');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00010100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B00000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B11000000);   //G, F
+                break;
+        case(6):
+                UARTCharPut(UART1_BASE, '6');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00010100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B01000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B11000000);   //G, F
+                break;
+        case(7):
+                UARTCharPut(UART1_BASE, '7');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00011000);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B00000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B00000000);   //G, F
+                break;
+        case(8):
+                UARTCharPut(UART1_BASE, '8');
+                GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2 |GPIO_PIN_3 | GPIO_PIN_4, 0B00011100);   //A ,B
+                GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B01000000);   //X, C
+                GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0B01000000);   //D, E
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7 | GPIO_PIN_6, 0B11000000);   //G, F
+                break;
+        }
+        EspaciosLibres = 8;
+        delay(1500);
     }
 
     return 0;
@@ -158,7 +233,7 @@ void delay(uint32_t msec){      //funcion para delay en milisegundos
 void InitUART0(void)
 {
     /*Enable the GPIO Port A*/
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
 
     /*Enable the peripheral UART Module 0*/
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -176,7 +251,7 @@ void InitUART0(void)
 
 void InitUART1(void){
     /*Enable the GPIO Port B*/
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+    //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
     /*Enable the peripheral UART Module 1*/
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
