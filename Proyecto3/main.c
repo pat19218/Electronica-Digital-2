@@ -100,47 +100,78 @@ int main(void){
 
         if (sensor1 == 0 ){
             //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x02);//ROJO
-            UARTCharPut(UART0_BASE, '1');
+            //UARTCharPut(UART0_BASE, '1');
+            UARTCharPut(UART1_BASE, 'a');
             EspaciosLibres--;
             //delay(500);
-        }if (sensor2 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'A');
+        }
+        if (sensor2 == 0 ){
            // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x04);//AZUL
-            UARTCharPut(UART0_BASE, '2');
+            //UARTCharPut(UART0_BASE, '2');
+            UARTCharPut(UART1_BASE, 'b');
             EspaciosLibres--;
            // delay(500);
-        }if (sensor3 == 0){
+        }else{
+            UARTCharPut(UART1_BASE, 'B');
+        }
+        if (sensor3 == 0){
             //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x08);//VERDE
-            UARTCharPut(UART0_BASE, '3');
+           // UARTCharPut(UART0_BASE, '3');
+            UARTCharPut(UART1_BASE, 'c');
             EspaciosLibres--;
            // delay(500);
-        }if (sensor4 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'C');
+        }
+        if (sensor4 == 0 ){
             //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x06);
-            UARTCharPut(UART0_BASE, '4');
+           // UARTCharPut(UART0_BASE, '4');
+            UARTCharPut(UART1_BASE, 'd');
             EspaciosLibres--;
            // delay(500);
-        }if (sensor5 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'D');
+        }
+        if (sensor5 == 0 ){
             //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
-            UARTCharPut(UART0_BASE, '5');
+            //UARTCharPut(UART0_BASE, '5');
+            UARTCharPut(UART1_BASE, 'e');
             EspaciosLibres--;
            // delay(500);
-        }if (sensor6 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'E');
+        }
+        if (sensor6 == 0 ){
             //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
-            UARTCharPut(UART0_BASE, '6');
+           // UARTCharPut(UART0_BASE, '6');
+            UARTCharPut(UART1_BASE, 'f');
             EspaciosLibres--;
             //delay(500);
-        }if (sensor7 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'F');
+        }
+        if (sensor7 == 0 ){
            // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0E);
-            UARTCharPut(UART0_BASE, '7');
+           // UARTCharPut(UART0_BASE, '7');
+            UARTCharPut(UART1_BASE, 'g');
             EspaciosLibres--;
             //delay(500);
-        }if (sensor8 == 0 ){
+        }else{
+            UARTCharPut(UART1_BASE, 'G');
+        }
+        if (sensor8 == 0 ){
            // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0A);
-            UARTCharPut(UART0_BASE, '8');
+            //UARTCharPut(UART0_BASE, '8');
+            UARTCharPut(UART1_BASE, 'h');
             EspaciosLibres--;
             //delay(500);
            // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x0C);
             //delay(500);
            // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0x00);
+        }else{
+            UARTCharPut(UART1_BASE, 'H');
         }
 
         switch(EspaciosLibres){
@@ -209,8 +240,6 @@ int main(void){
                 break;
         }
         EspaciosLibres = 8;
-        delay(1000);
-        delay(1000);
         delay(1000);
     }
 

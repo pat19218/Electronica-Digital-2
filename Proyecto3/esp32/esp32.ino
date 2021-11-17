@@ -1,4 +1,4 @@
-     /*************************************************************************************************
+/*************************************************************************************************
   ESP32 Web Server
   Ejemplo de creación de Web server con acceso a SPIFFS
   Basándose en los ejemplos de:
@@ -10,19 +10,33 @@
 //************************************************************************************************
 // Librerías
 //************************************************************************************************
-#include <WiFi.h> 
+#include <WiFi.h>
 #include <SPIFFS.h>
 #include <WebServer.h>
+#include <Adafruit_NeoPixel.h>
+
+#ifdef __AVR__
+#include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+
+// Which pin on the Arduino is connected to the NeoPixels?
+#define PIN 13 // On Trinket or Gemma, suggest changing this to 1
+
+// How many NeoPixels are attached to the Arduino?
+#define NUMPIXELS 16 // Popular NeoPixel ring size
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
 char palabra;
+
 //************************************************************************************************
 // Variables globales
 //************************************************************************************************
 // SSID & Password
 const char* ssid = "tacu´s wifi";  // Enter SSID here
 const char* password = "12345678";  //Enter Password here
-IPAddress local_ip(192,168,1,1);
-IPAddress gateway(192,168,1,1);
-IPAddress subnet(255,255,255,0);
+IPAddress local_ip(192, 168, 1, 1);
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 255, 0);
 
 WebServer server(80);  // Object of WebServer(HTTP port, 80 is defult)
 
@@ -33,7 +47,7 @@ WebServer server(80);  // Object of WebServer(HTTP port, 80 is defult)
 void setup() {
   Serial2.begin(115200);
   Serial.begin(115200);
-  
+
   if (!SPIFFS.begin()) {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
@@ -47,15 +61,6 @@ void setup() {
   Serial.println(password);
 
   server.on("/", handle_OnConnect); // página de inicio
-  server.on("/0espacio", handle_0on); // handler al existir 0 espacio
-  server.on("/1espacio", handle_1on); // handler al existir 1 espacio
-  server.on("/2espacio", handle_2on); // handler al existir 2 espacio
-  server.on("/3espacio", handle_3on); // handler al existir 3 espacio
-  server.on("/4espacio", handle_4on); // handler al existir 4 espacio
-  server.on("/5espacio", handle_5on); // handler al existir 5 espacio
-  server.on("/6espacio", handle_6on); // handler al existir 6 espacio
-  server.on("/7espacio", handle_7on); // handler al existir 7 espacio
-  server.on("/8espacio", handle_8on); // handler al existir 8 espacio
   server.onNotFound([]() {                  // si el cliente solicita una uri desconocida
     if (!HandleFileRead(server.uri()))      // enviar archivo desde SPIFF, si existe
       handleNotFound();             // sino responder con un error 404 (no existe)
@@ -65,6 +70,15 @@ void setup() {
   server.begin(); // iniciar servidor
   Serial.println("HTTP server started");
   delay(100);
+  // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
+  // Any other board, you can remove this part (but no harm leaving it):
+#if defined(__AVR_ATtiny85__) && (F_CPU == 80000000)
+  clock_prescale_set(clock_div_1);
+#endif
+  // END of Trinket-specific code.
+
+  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.clear(); // Set all pixel colors to 'off'
 }
 //************************************************************************************************
 // loop principal
@@ -72,10 +86,67 @@ void setup() {
 void loop() {
   if (Serial2.available()) {
     palabra = Serial2.read();
+    Serial.println(palabra);
+  }
+
+  if (palabra == 'a') {
+    pixels.setPixelColor(0, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else if (palabra == 'A') {
+    pixels.setPixelColor(0, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'b') {
+    pixels.setPixelColor(1, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else if (palabra == 'B') {
+    pixels.setPixelColor(1, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'c') {
+    pixels.setPixelColor(2, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'C') {
+    pixels.setPixelColor(2, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'd') {
+    pixels.setPixelColor(3, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'D') {
+    pixels.setPixelColor(3, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'e') {
+    pixels.setPixelColor(4, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'E') {
+    pixels.setPixelColor(4, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'f') {
+    pixels.setPixelColor(5, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'F') {
+    pixels.setPixelColor(5, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'g') {
+    pixels.setPixelColor(6, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'G') {
+    pixels.setPixelColor(6, pixels.Color(0, 100, 0));
+    pixels.show();
+  }
+  if (palabra == 'h') {
+    pixels.setPixelColor(7, pixels.Color(100, 0, 0));
+    pixels.show();
+  } else  if (palabra == 'H') {
+    pixels.setPixelColor(7, pixels.Color(0, 100, 0));
+    pixels.show();
   }
   server.handleClient(); // escuchar solicitudes de clientes
-  delay(500);
-  delay(500);
+
   server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
   
 }
@@ -86,74 +157,9 @@ void handle_OnConnect() {
   handle_8on(); // inicia LED apagado, por defecto
 }
 //************************************************************************************************
-// Handler de handle_0on
-//************************************************************************************************
-void handle_0on() {
-  
-  Serial.println("Espacio disponibles: 0");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_1on
-//************************************************************************************************
-void handle_1on() {
-  
-  Serial.println("Espacio disponibles: 1");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_2on
-//************************************************************************************************
-void handle_2on() {
-  
-  Serial.println("Espacio disponibles: 2");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_3on
-//************************************************************************************************
-void handle_3on() {
-  
-  Serial.println("Espacio disponibles: 3");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_4on
-//************************************************************************************************
-void handle_4on() {
-  
-  Serial.println("Espacio disponibles: 4");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_5on
-//************************************************************************************************
-void handle_5on() {
-  
-  Serial.println("Espacio disponibles: 5");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_6on
-//************************************************************************************************
-void handle_6on() {
-  
-  Serial.println("Espacio disponibles: 6");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
-// Handler de handle_7on
-//************************************************************************************************
-void handle_7on() {
-  
-  Serial.println("Espacio disponibles: 7");
-  server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
-}
-//************************************************************************************************
 // Handler de handle_8on
 //************************************************************************************************
 void handle_8on() {
-  
   Serial.println("Espacio disponibles: 8");
   server.send(200, "text/html", SendHTML(palabra)); //responde con un OK (200) y envía HTML
 }
@@ -162,7 +168,7 @@ void handle_8on() {
 // Procesador de HTML
 //************************************************************************************************
 String SendHTML(char cantidad) {
- String ptr = "<!DOCTYPE html> <html>\n";  //indicates that we’re sending HTML code.
+  String ptr = "<!DOCTYPE html> <html>\n";  //indicates that we’re sending HTML code.
   ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
   ptr += "<title> Parqueo-matic </title>\n";
   ptr += "<meta http-equiv=\"refresh\" content=\"3\" />";
@@ -175,24 +181,24 @@ String SendHTML(char cantidad) {
   ptr += "<br>  <br/>";
   ptr += "<p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; La cantidad de espacios disponibles es: </p>";
   ptr += "<br>  <br/>";
-  
+
   if (cantidad == '0') {
     ptr += "<h1 align=\"center\"> 0 </h1>";
-  }else if(cantidad == '1') {
+  } else if (cantidad == '1') {
     ptr += "<h1 align=\"center\"> 1 </h1>";
-  }else if(cantidad == '2') {
+  } else if (cantidad == '2') {
     ptr += "<h1 align=\"center\"> 2 </h1>";
-  }else if(cantidad == '3') {
+  } else if (cantidad == '3') {
     ptr += "<h1 align=\"center\"> 3 </h1>";
-  }else if(cantidad == '4') {
+  } else if (cantidad == '4') {
     ptr += "<h1 align=\"center\"> 4 </h1>";
-  }else if(cantidad == '5') {
+  } else if (cantidad == '5') {
     ptr += "<h1 align=\"center\"> 5 </h1>";
-  }else if(cantidad == '6') {
+  } else if (cantidad == '6') {
     ptr += "<h1 align=\"center\"> 6 </h1>";
-  }else if(cantidad == '7') {
+  } else if (cantidad == '7') {
     ptr += "<h1 align=\"center\"> 7 </h1>";
-  }else if(cantidad == '8') {
+  } else if (cantidad == '8') {
     ptr += "<h1 align=\"center\"> 8 </h1>";
   }
 
