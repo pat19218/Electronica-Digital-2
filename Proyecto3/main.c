@@ -209,7 +209,9 @@ int main(void){
                 break;
         }
         EspaciosLibres = 8;
-        delay(1500);
+        delay(1000);
+        delay(1000);
+        delay(1000);
     }
 
     return 0;
